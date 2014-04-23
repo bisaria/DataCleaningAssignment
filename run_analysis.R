@@ -46,8 +46,8 @@ run_analysis<-function(zipdir){
   
   # Features are renamed to make it more descriptive by substituting 
   # Mean for -mean(), Std for -std(), timeDomain for t and frequencyDomain for f
-  names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
-  names(data_All)<-gsub("-std\\()","Std", names(data_All)) 
+  names(data_All)<-gsub("-mean\\()", "Mean", names(data_All)) 
+  names(data_All)<-gsub("-std\\()", "Std", names(data_All)) 
   names(data_All)<-gsub("^t","timeDomain", names(data_All)) 
   names(data_All)<-gsub("^f","frequencyDomain", names(data_All)) 
   
