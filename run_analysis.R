@@ -46,8 +46,13 @@ run_analysis<-function(zipdir){
   
   # Features are renamed to make it more descriptive by substituting 
   # Mean for -mean(), Std for -std(), timeDomain for t and frequencyDomain for f
+<<<<<<< HEAD
   names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
   names(data_All)<-gsub("-std\\()","Std", names(data_All)) 
+=======
+  names(data_All)<-gsub("-mean\\()", "Mean", names(data_All)) 
+  names(data_All)<-gsub("-std\\()", "Std", names(data_All)) 
+>>>>>>> 4ada7821e3c8c1607c0f84561f069287e0121783
   names(data_All)<-gsub("^t","timeDomain", names(data_All)) 
   names(data_All)<-gsub("^f","frequencyDomain", names(data_All)) 
   
@@ -63,4 +68,8 @@ run_analysis<-function(zipdir){
   
   # Return tidyData data frame.
   tidydata
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4ada7821e3c8c1607c0f84561f069287e0121783
