@@ -67,7 +67,11 @@ Human Activity Recognition Using Smartphones Data Set
           unzip(temp, exdir = zipdir)     
         }
         
-  * Observed Data from `train/X_train.txt` and `test/X_test.txt` is read into data frames `data_Train` and `data_Test` respectively, 
+  * Local directory `zipdir` is then passed as argument of function `run_analysis.R` in order to access all the relevant files.
+  
+        run_analysis<-function(zipdir){
+  
+  * Observed Data from `train/X_train.txt` and `test/X_test.txt` is read into data frames `data_Train` and `data_Test` respectively from appropriate folders in `zipdir`, 
   
         data_Train<-read.table(paste(zipdir,"train/X_train.txt", sep= "/"), stringsAsFactors = FALSE)
         data_Test<-read.table(paste(zipdir,"test/X_test.txt", sep= "/"), stringsAsFactors = FALSE)
@@ -114,7 +118,10 @@ Human Activity Recognition Using Smartphones Data Set
       
 ##### Step 2 : Extract only the measurements on the mean and standard deviation for each measurement     
 
-  * As _only_ the measurements on the mean and standard deviation for each measurement is required `grep()` is used to extract these relevant columns by their names.
+  * As _only_ the measurements on the mean and standard deviation for each measurement is required, `grep()` is used to extract these relevant columns. Features documenting `meanFreq` were not included for this very reason.
+  
+  * Features matching `mean` and `std` with `-X`, `-Y` and `-Z` as suffixes were excluded assuming them to be derived values along x, y and z axes. 
+  
   * `grep()` is used get only those columns with `mean()` and `std()` at the end. This gives a vector of column names `selectColumns` only with `mean()` and `std()` as required.
   
         selectColumns<-grep(".[mean\\()|std\\()]$",selectColumns, value = TRUE)
