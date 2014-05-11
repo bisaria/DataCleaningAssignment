@@ -45,6 +45,7 @@ run_analysis<-function(zipdir){
   data_All$Activity<-as.factor(data_All$Activity)
   setattr(data_All$Activity, "levels", data_activity_labels[,2])  
   data_Observations
+  
   # Features are renamed to make it more descriptive by substituting 
   # Mean for -mean(), Std for -std(), timeDomain for t and frequencyDomain for f
   names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
@@ -62,7 +63,7 @@ run_analysis<-function(zipdir){
   names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
   names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata))
   
-  #write tidyData to a text file
+  # Write tidyData to a text file
   write.table(tidydata, file = "tidyData.txt", row.names = FALSE, col.names = TRUE)
   
   # Return tidyData data frame.
