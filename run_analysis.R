@@ -1,7 +1,7 @@
 run_analysis<-function(zipdir){   
   # Returns Tidy Data Set
   # library(reshape2)
-  
+    
   # load Training and Test data sets
   data_Train<-read.table(paste(zipdir,"train/X_train.txt", sep= "/"), stringsAsFactors = FALSE)
   data_Test<-read.table(paste(zipdir,"test/X_test.txt", sep= "/"), stringsAsFactors = FALSE)
@@ -19,31 +19,32 @@ run_analysis<-function(zipdir){
   
   # load activity name for each Activity labels
   data_activity_labels<-read.table(paste(zipdir,"activity_labels.txt", sep= "/"), stringsAsFactors = FALSE)  
-  
+
   # Merge the train and test datasets
   data_Observations<-rbind(data_Train, data_Test)
   data_Subject<-rbind(data_SubTrain,data_SubTest)
   data_Activity<-rbind(data_Train_Activity, data_Test_Activity)
-  
+    
   # Set data_features as the column names for data_Observations
   setnames(data_Observations,names(data_Observations), data_features[,2])
   
   # Set approriate names for columns in data_Subject and data_Activity data frames.
   setnames(data_Subject, names(data_Subject), "Subject")
   setnames(data_Activity, names(data_Activity), "Activity")
-  
+   
   # Grep the column with names having pattern 'mean()' or 'std()' at the end.  
-  selectColumns<-grep(".[mean\\()|std\\()]$",selectColumns, value = TRUE)
+  selectColumns<-(grepl("-mean\\()$",names(data_Observations)) &
+                    !grepl("-meanFreq\\()",names(data_Observations)) | grepl("-std\\()$",names(data_Observations)))
   data_Observations<-data_Observations[,selectColumns]
   
   # column bind all the three data frames.
   data_All<-cbind(data_Activity, data_Observations)  
   data_All<-cbind(data_Subject, data_All)
-  
+    
   # set descriptive activity names for all activities
   data_All$Activity<-as.factor(data_All$Activity)
   setattr(data_All$Activity, "levels", data_activity_labels[,2])  
-  
+  data_Observations
   # Features are renamed to make it more descriptive by substituting 
   # Mean for -mean(), Std for -std(), timeDomain for t and frequencyDomain for f
   names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
@@ -60,6 +61,9 @@ run_analysis<-function(zipdir){
   # Rename the measure variables as average.
   names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
   names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata))
+  
+  #write tidyData to a text file
+  write.table(tidydata, file = "tidyData.txt", row.names = FALSE, col.names = TRUE)
   
   # Return tidyData data frame.
   tidydata

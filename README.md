@@ -124,7 +124,9 @@ Human Activity Recognition Using Smartphones Data Set
   
   * `grep()` is used get only those columns with `mean()` and `std()` at the end. This gives a vector of column names `selectColumns` only with `mean()` and `std()` as required.
   
-        selectColumns<-grep(".[mean\\()|std\\()]$",selectColumns, value = TRUE)
+        selectColumns<-(grepl("-mean\\()$",names(data_Observations)) &
+                    !grepl("-meanFreq\\()",names(data_Observations)) | 
+                     grepl("-std\\()$",names(data_Observations)))
     
   * `selectColumns` is used to extract only the relevant columns from the `data_Observations` data frame.
   
@@ -179,18 +181,23 @@ Human Activity Recognition Using Smartphones Data Set
   
         names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
         names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata))
+    
+  * Write tidy data to a text file.
         
-  * Fucntion `run_analysis` returns the `tidydata` created.
+        write.table(tidydata, file = "tidyData.txt", row.names = FALSE, col.names = TRUE)
+        
+  * Function `run_analysis` returns the `tidydata` created.
 
 ### Tidy Data Set Information
 
-  * Tidy data set summarises the mean and standard deviations of the time and frequency domain features of gravitational       and body motion components of the  sensor signals for each observation. 
-  * It presents the average of each such features  for each activity and each subject.
+  * Tidy data set summarises the mean and standard deviations of the time and frequency domain features of gravitational and body motion components of the  sensor signals for each observation. 
+  * It presents the average of each such features  for each activity and each volunteer. Since 6 activities performed by each of 30 volunteers, there are 180 data rows in total.
   
   * Variables:
   
-    * Subject: range 1:30, represents group of 30 volunteers on whom experimnts where carried out.
-    * Activity: activities performed by each subject
+    * Total number of variables: 20 
+    * Subject: range 1:30, represents group of 30 volunteers on whom experiments where carried out.
+    * Activity: activities performed by each volunteer
     
               WALKING
               WALKING_UPSTAIRS
@@ -216,4 +223,4 @@ Human Activity Recognition Using Smartphones Data Set
     * avgFrequencyDomainBodyBodyGyroMagMean -> average of fBodyBodyGyroMag-mean()
     * avgFrequencyDomainBodyBodyGyroMagStd -> average of fBodyBodyGyroMag-std()
     * avgFrequencyDomainBodyBodyGyroJerkMagMean -> average of fBodyBodyGyroJerkMag-mean()
-    * avgFrequencyDomainBodyBodyGyroJerkMag -> average of fBodyBodyGyroJerkMag-std()
+    * avgFrequencyDomainBodyBodyGyroJerkMagStd -> average of fBodyBodyGyroJerkMag-std()
