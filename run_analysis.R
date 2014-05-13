@@ -1,5 +1,7 @@
 run_analysis<-function(zipdir){   
   # Returns Tidy Data Set
+  # Requirement: 
+  # library(data.table)
   # library(reshape2)
     
   # load Training and Test data sets
@@ -29,10 +31,10 @@ run_analysis<-function(zipdir){
   setnames(data_Observations,names(data_Observations), data_features[,2])
   
   # Set approriate names for columns in data_Subject and data_Activity data frames.
-  setnames(data_Subject, names(data_Subject), "Subject")
-  setnames(data_Activity, names(data_Activity), "Activity")
+  setnames(data_Subject, names(data_Subject), "subject")
+  setnames(data_Activity, names(data_Activity), "activity")
    
-  # Grep the column with names having pattern 'mean()' or 'std()' at the end.  
+  # Grep the column with names having pattern 'mean()' or 'std()' 
   selectColumns<-(grepl("-mean\\()$",names(data_Observations)) &
                     !grepl("-meanFreq\\()",names(data_Observations)) | grepl("-std\\()$",names(data_Observations)))
   data_Observations<-data_Observations[,selectColumns]
@@ -42,28 +44,30 @@ run_analysis<-function(zipdir){
   data_All<-cbind(data_Subject, data_All)
     
   # set descriptive activity names for all activities
-  data_All$Activity<-as.factor(data_All$Activity)
-  setattr(data_All$Activity, "levels", data_activity_labels[,2])  
-  data_Observations
+  data_activity_labels[,2]<-tolower(gsub("_"," ", data_activity_labels[,2]))
+  data_All$activity<-as.factor(data_All$activity)
+  setattr(data_All$activity, "levels", data_activity_labels[,2])  
   
   # Features are renamed to make it more descriptive by substituting 
-  # Mean for -mean(), Std for -std(), timeDomain for t and frequencyDomain for f
-  names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
-  names(data_All)<-gsub("-std\\()","Std", names(data_All)) 
-  names(data_All)<-gsub("^t","timeDomain", names(data_All)) 
-  names(data_All)<-gsub("^f","frequencyDomain", names(data_All)) 
+  # mean for -mean(), std for -std(), timedomain for t and frequencydomain for f
+  names(data_All)<-gsub("-mean\\()","mean", names(data_All)) 
+  names(data_All)<-gsub("-std\\()","std", names(data_All)) 
+  names(data_All)<-gsub("^t","timedomain", names(data_All)) 
+  names(data_All)<-gsub("^f","frequencydomain", names(data_All)) 
+  names(data_All)<-gsub("BodyBody","body", names(data_All)) 
   
   # Create multiple rows of unique id-variable combinations and save in a new data frame.
-  tidydata<-melt(as.data.frame(data_All), id=c("Subject",  "Activity"))
+  tidydata<-melt(as.data.frame(data_All), id=c("subject",  "activity"))
   
   # Compute average of each variable for each activity and each subject.
-  tidydata<-dcast(tidydata, Subject + Activity ~ variable, mean)  
+  tidydata<-dcast(tidydata, subject + activity ~ variable, mean)  
   
-  # Rename the measure variables as average.
-  names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
-  names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata))
+  # Rename the measure variables as average and convert the names to lower case.
+  names(tidydata)<-gsub("^timedomain","avgtimedomain", names(tidydata)) 
+  names(tidydata)<-gsub("^frequencydomain","avgfrequencydomain", names(tidydata))
+  names(tidydata)<-tolower(names(tidydata))
   
-  # Write tidyData to a text file
+  #write tidyData to a text file
   write.table(tidydata, file = "tidyData.txt", row.names = FALSE, col.names = TRUE)
   
   # Return tidyData data frame.
