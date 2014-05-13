@@ -39,6 +39,55 @@ Human Activity Recognition Using Smartphones Data Set
 
       - 'train/Inertial Signals/body_acc_x_train.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration.
 
+### Tidy Data Set 
+
+  * Tidy data set summarises the mean and standard deviations of the time and frequency domain features of gravitational and body motion components of the  sensor signals for each observation. Since task is to extract only the measurements on the mean and standard deviation for each measurement, other features like meanFreq is not considered. In total 18 features are extracted for tidy data set.
+  
+     * mean and std measures of time domain body acceleration magnitude 
+     * mean and std measures of time domain gravity acceleration magnitude
+     * mean and std measures of time domain body linear acceleration jerk magnitude
+     * mean and std measures of time domain body angular velocity magnitude
+     * mean and std measures of time domain body angular velocity jerk magnitude
+     * mean and std measures of frequency domain body acceleration magnitude 
+     * mean and std measures of frequency domain body linear acceleration jerk magnitude
+     * mean and std measures of frequency domain body angular velocity magnitude
+     * mean and std measures of frequency domain body angular velocity jerk magnitude
+     
+  
+  * It presents the average of each such features  for each activity and each volunteer. Since 6 activities are performed by each of 30 volunteers, there are 180 data rows in total.
+  
+  * Variables:
+  
+    * Total number of variables: 20 
+    * subject: range 1:30, represents group of 30 volunteers on whom experiments where carried out.
+    * activity: activities performed by each volunteer
+    
+              walking
+              walking upstairs
+              walking downstairs
+              sitting
+              standing
+              laying
+              
+    * avgtimedomainbodyaccmagmean ->  average of tBodyAccMag-mean()        
+    * avgtimedomainbodyaccmagstd ->  average of tBodyAccMag-std()
+    * avgtimedomaingravityaccmagmean -> average of tGravityAccMag-mean()
+    * avgtimedomaingravityaccmagstd ->  average of tGravityAccMag-std()
+    * avgtimedomainbodyaccjerkmagmean -> average of tBodyAccJerkMag-mean()
+    * avgtimedomainbodyaccjerkmagstd ->  average of tBodyAccJerkMag-std()
+    * avgtimedomainbodygyromagmean ->  average of tBodyGyroMag-mean()
+    * avgtimedomainbodygyromagstd -> average of tBodyGyroMag-std()
+    * avgtimedomainbodygyrojerkmagmean -> average of tBodyGyroJerkMag-mean()
+    * avgtimedomainbodygyrojerkmagstd -> average of tBodyGyroJerkMag-std()
+    * avgfrequencydomainbodyaccmagmean -> average of fBodyAccMag-mean()
+    * avgfrequencydomainbodyaccmagstd ->  average of fBodyAccMag-std()
+    * avgfrequencydomainbodyaccjerkmagmean -> average of fBodyBodyAccJerkMag-mean()
+    * avgfrequencydomainbodyaccjerkmagstd -> average of fBodyBodyAccJerkMag-std()
+    * avgfrequencydomainbodygyromagmean -> average of fBodyBodyGyroMag-mean()
+    * avgfrequencydomainbodygyromagstd -> average of fBodyBodyGyroMag-std()
+    * avgfrequencydomainbodygyrojerkmagmean -> average of fBodyBodyGyroJerkMag-mean()
+    * avgfrequencydomainbodygyrojerkmagstd -> average of fBodyBodyGyroJerkMag-std()
+
 ### Assignment
   Create one R script `run_analysis.R` to do the following: 
 
@@ -113,8 +162,8 @@ Human Activity Recognition Using Smartphones Data Set
   
   * Column names for `data_SubTrain` and  `data_Train_Activity` is also assigned as
   
-        setnames(data_Subject, names(data_Subject), "Subject")         
-        setnames(data_Activity, names(data_Activity), "Activity")
+        setnames(data_Subject, names(data_Subject), "subject")         
+        setnames(data_Activity, names(data_Activity), "activity")
       
 ##### Step 2 : Extract only the measurements on the mean and standard deviation for each measurement     
 
@@ -139,27 +188,27 @@ Human Activity Recognition Using Smartphones Data Set
   
 ##### Step 3 : Descriptive activity names for the activities in the data set
 
-  * Activity name for each activity, which has been loaded into data frame `data_activity_labels` in Step 1, is used to give proper description. 
+  * Activity name for each activity, which has been loaded into data frame `data_activity_labels` in Step 1, is used to give proper description. Remove "_" from the activity label and convert it to lower case.
   
-  * `Activity` column of data frame `data_All` is converted to factor as
+        data_activity_labels[,2]<-tolower(gsub("_"," ", data_activity_labels[,2]))
+        
+  * `activity` column of data frame `data_All` is converted to factor as
   
-        data_All$Activity<-as.factor(data_All$Activity)
+        data_All$Activity<-as.factor(data_All$activity)
     
   * Appropriate labels are assigned to the levels as
   
-        setattr(data_All$Activity, "levels", data_activity_labels[,2])
+        setattr(data_All$activity, "levels", data_activity_labels[,2])
         
 ##### Step 4 : Descriptive feature names for the selected features in the data set 
 
-  * Features are renamed to make it more descriptive by substituting `Mean` for `-mean()`, `Std` for `-std()`,
-  `timeDomain` for `t` and `frequencyDomain` for `f`
+  * Features are renamed to make it more descriptive by substituting `mean` for `-mean()`, `std` for `-std()`,
+  `timedomain` for `t` and `frequencydomain` for `f`.   
   
-  * For example `tBodyAccMag-mean()` is named as `timeDomainBodyAccMagMean` and `fBodyAccMag-std()` as `frequencyDomainBodyAccMagStd` and so on.  
-  
-        names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
-        names(data_All)<-gsub("-std\\()","Std", names(data_All)) 
-        names(data_All)<-gsub("^t","timeDomain", names(data_All)) 
-        names(data_All)<-gsub("^f","frequencyDomain", names(data_All))           
+        names(data_All)<-gsub("-mean\\()","mean", names(data_All)) 
+        names(data_All)<-gsub("-std\\()","std", names(data_All)) 
+        names(data_All)<-gsub("^t","timedomain", names(data_All)) 
+        names(data_All)<-gsub("^f","frequencydomain", names(data_All))           
   
 ##### Step 5 : Create a second, independent tidy data set with the average of each variable for each activity and each subject.
 
@@ -169,18 +218,19 @@ Human Activity Recognition Using Smartphones Data Set
 
   * `library(reshape2)` is required to perform this final step.
 
-  * `melt()` is used on `data_All` with `id=c("Subject",  "Activity")` to create multiple rows of unique id-variable combinations.
+  * `melt()` is used on `data_All` with `id=c("subject",  "activity")` to create multiple rows of unique id-variable combinations.
   
-        tidydata<-melt(as.data.frame(data_All), id=c("Subject",  "Activity"))
+        tidydata<-melt(as.data.frame(data_All), id=c("subject",  "activity"))
         
   * Average of each variable for each activity and each subject is computed into final data frame `tidydata` using `dcast()` 
   
-        tidydata<-dcast(tidydata, Subject + Activity ~ variable, mean) 
+        tidydata<-dcast(tidydata, subject + activity ~ variable, mean) 
         
-  * Raname all measure variables with prefix `avg`.
+  * Raname all measure variables with prefix `avg` and convert the names to lower case.
   
-        names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
-        names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata))
+        names(tidydata)<-gsub("^timeDomain","avgtimedomain", names(tidydata)) 
+        names(tidydata)<-gsub("^frequencyDomain","avgfrequencydomain", names(tidydata))
+        names(tidydata)<-tolower(names(tidydata))
     
   * Write tidy data to a text file.
         
@@ -188,39 +238,3 @@ Human Activity Recognition Using Smartphones Data Set
         
   * Function `run_analysis` returns the `tidydata` created.
 
-### Tidy Data Set Information
-
-  * Tidy data set summarises the mean and standard deviations of the time and frequency domain features of gravitational and body motion components of the  sensor signals for each observation. 
-  * It presents the average of each such features  for each activity and each volunteer. Since 6 activities performed by each of 30 volunteers, there are 180 data rows in total.
-  
-  * Variables:
-  
-    * Total number of variables: 20 
-    * Subject: range 1:30, represents group of 30 volunteers on whom experiments where carried out.
-    * Activity: activities performed by each volunteer
-    
-              WALKING
-              WALKING_UPSTAIRS
-              WALKING_DOWNSTAIRS
-              SITTING
-              STANDING
-              LAYING
-              
-    * avgTimeDomainBodyAccMagMean ->  average of tBodyAccMag-mean()        
-    * avgTimeDomainBodyAccMagStd ->  average of tBodyAccMag-std()
-    * avgTimeDomainGravityAccMagMean -> average of tGravityAccMag-mean()
-    * avgTimeDomainGravityAccMagStd ->  average of tGravityAccMag-std()
-    * avgTimeDomainBodyAccJerkMagMean -> average of tBodyAccJerkMag-mean()
-    * avgTimeDomainBodyAccJerkMagStd ->  average of tBodyAccJerkMag-std()
-    * avgTimeDomainBodyGyroMagMean ->  average of tBodyGyroMag-mean()
-    * avgTimeDomainBodyGyroMagStd -> average of tBodyGyroMag-std()
-    * avgTimeDomainBodyGyroJerkMagMean -> average of tBodyGyroJerkMag-mean()
-    * avgTimeDomainBodyGyroJerkMagStd -> average of tBodyGyroJerkMag-std()
-    * avgFrequencyDomainBodyAccMagMean -> average of fBodyAccMag-mean()
-    * avgFrequencyDomainBodyAccMagStd ->  average of fBodyAccMag-std()
-    * avgFrequencyDomainBodyBodyAccJerkMagMean -> average of fBodyBodyAccJerkMag-mean()
-    * avgFrequencyDomainBodyBodyAccJerkMagStd -> average of fBodyBodyAccJerkMag-std()
-    * avgFrequencyDomainBodyBodyGyroMagMean -> average of fBodyBodyGyroMag-mean()
-    * avgFrequencyDomainBodyBodyGyroMagStd -> average of fBodyBodyGyroMag-std()
-    * avgFrequencyDomainBodyBodyGyroJerkMagMean -> average of fBodyBodyGyroJerkMag-mean()
-    * avgFrequencyDomainBodyBodyGyroJerkMagStd -> average of fBodyBodyGyroJerkMag-std()
