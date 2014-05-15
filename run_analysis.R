@@ -1,5 +1,3 @@
-run_analysis<-function(){   
-  
   # Requirement: 
   # library(data.table)
   # library(reshape2)
@@ -44,8 +42,10 @@ run_analysis<-function(){
   data_All<-cbind(data_Activity, data_Observations)  
   data_All<-cbind(data_Subject, data_All)
     
-  # set descriptive activity names for all activities
-  data_activity_labels[,2]<-tolower(gsub("_"," ", data_activity_labels[,2]))
+  # set descriptive activity names for all activities in lower case
+  data_activity_labels[,2]<-gsub("WALKING_UPSTAIRS","walkup", data_activity_labels[,2])
+  data_activity_labels[,2]<-gsub("WALKING_DOWNSTAIRS","walkdown", data_activity_labels[,2])
+  data_activity_labels[,2]<-tolower(gsub("_","", data_activity_labels[,2]))
   data_All$activity<-as.factor(data_All$activity)
   setattr(data_All$activity, "levels", data_activity_labels[,2])  
   
@@ -72,4 +72,3 @@ run_analysis<-function(){
   #write tidyData to a text file
   write.table(tidydata, file = "tidyData.txt", row.names = FALSE, col.names = TRUE)
   
-}
