@@ -79,7 +79,7 @@ Human Activity Recognition Using Smartphones Data Set
               standing
               laying
               
-    * avgTimeDomainBodyAccMagMean ->  average of tBodyAccMag-mean()  
+    * avgTimeDomainBodyAccMagMean ->  average of tBodyAccMag-mean()
     * avgTimeDomainBodyAccMagStd ->  average of tBodyAccMag-std()
     * avgTimeDomainGravityAccMagMean -> average of tGravityAccMag-mean()
     * avgTimeDomainGravityAccMagStd ->  average of tGravityAccMag-std()
