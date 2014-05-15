@@ -73,8 +73,8 @@ Human Activity Recognition Using Smartphones Data Set
     * activity: activities performed by each volunteer
     
               walking
-              walking upstairs
-              walking downstairs
+              walkup
+              walkdown
               sitting
               standing
               laying
@@ -198,6 +198,8 @@ Human Activity Recognition Using Smartphones Data Set
 
   * Activity name for each activity, which has been loaded into data frame `data_activity_labels` in Step 1, is used to give proper description. Remove "_" from the activity label and convert it to lower case.
   
+        data_activity_labels[,2]<-gsub("WALKING_UPSTAIRS","walkup", data_activity_labels[,2])
+        data_activity_labels[,2]<-gsub("WALKING_DOWNSTAIRS","walkdown", data_activity_labels[,2])
         data_activity_labels[,2]<-tolower(gsub("_"," ", data_activity_labels[,2]))
         
   * `activity` column of data frame `data_All` is converted to factor as
