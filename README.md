@@ -79,7 +79,7 @@ Human Activity Recognition Using Smartphones Data Set
               standing
               laying
               
-    * avgTimeDomainBodyAccMagMean ->  average of tBodyAccMag-mean()        
+    * avgTimeDomainBodyAccMagMean ->  average of tBodyAccMag-mean()  
     * avgTimeDomainBodyAccMagStd ->  average of tBodyAccMag-std()
     * avgTimeDomainGravityAccMagMean -> average of tGravityAccMag-mean()
     * avgTimeDomainGravityAccMagStd ->  average of tGravityAccMag-std()
@@ -241,7 +241,7 @@ Human Activity Recognition Using Smartphones Data Set
   
         tidydata<-dcast(tidydata, subject + activity ~ variable, mean) 
         
-  * Raname all measure variables with prefix `avg` and maintaine the lower camel case convention.
+  * Rename all measure variables with prefix `avg` and maintaine the lower camel case convention.
   
         names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
         names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata)) 
