@@ -52,6 +52,7 @@ run_analysis<-function(){
   # Variables renamed in lower camel case for easy readability.
   # Features are renamed to make it more descriptive by substituting 
   # mean for -mean(), std for -std(), timedomain for t and frequencydomain for f
+  # and substitute BodyBody by Body.
   names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
   names(data_All)<-gsub("-std\\()","Std", names(data_All)) 
   names(data_All)<-gsub("^t","timeDomain", names(data_All)) 
