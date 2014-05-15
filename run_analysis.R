@@ -1,10 +1,11 @@
-run_analysis<-function(zipdir){   
-  # Returns Tidy Data Set
+run_analysis<-function(){   
+  
   # Requirement: 
   # library(data.table)
   # library(reshape2)
     
-  # load Training and Test data sets
+  # load Training and Test data sets from "UCI HAR Dataset" directory
+  zipdir<-"UCI HAR Dataset"
   data_Train<-read.table(paste(zipdir,"train/X_train.txt", sep= "/"), stringsAsFactors = FALSE)
   data_Test<-read.table(paste(zipdir,"test/X_test.txt", sep= "/"), stringsAsFactors = FALSE)
   
@@ -48,13 +49,14 @@ run_analysis<-function(zipdir){
   data_All$activity<-as.factor(data_All$activity)
   setattr(data_All$activity, "levels", data_activity_labels[,2])  
   
+  # Variables renamed in lower camel case for easy readability.
   # Features are renamed to make it more descriptive by substituting 
   # mean for -mean(), std for -std(), timedomain for t and frequencydomain for f
-  names(data_All)<-gsub("-mean\\()","mean", names(data_All)) 
-  names(data_All)<-gsub("-std\\()","std", names(data_All)) 
-  names(data_All)<-gsub("^t","timedomain", names(data_All)) 
-  names(data_All)<-gsub("^f","frequencydomain", names(data_All)) 
-  names(data_All)<-gsub("BodyBody","body", names(data_All)) 
+  names(data_All)<-gsub("-mean\\()","Mean", names(data_All)) 
+  names(data_All)<-gsub("-std\\()","Std", names(data_All)) 
+  names(data_All)<-gsub("^t","timeDomain", names(data_All)) 
+  names(data_All)<-gsub("^f","frequencyDomain", names(data_All)) 
+  names(data_All)<-gsub("BodyBody","Body", names(data_All)) 
   
   # Create multiple rows of unique id-variable combinations and save in a new data frame.
   tidydata<-melt(as.data.frame(data_All), id=c("subject",  "activity"))
@@ -63,13 +65,10 @@ run_analysis<-function(zipdir){
   tidydata<-dcast(tidydata, subject + activity ~ variable, mean)  
   
   # Rename the measure variables as average and convert the names to lower case.
-  names(tidydata)<-gsub("^timedomain","avgtimedomain", names(tidydata)) 
-  names(tidydata)<-gsub("^frequencydomain","avgfrequencydomain", names(tidydata))
-  names(tidydata)<-tolower(names(tidydata))
+  names(tidydata)<-gsub("^timeDomain","avgTimeDomain", names(tidydata)) 
+  names(tidydata)<-gsub("^frequencyDomain","avgFrequencyDomain", names(tidydata))  
   
   #write tidyData to a text file
   write.table(tidydata, file = "tidyData.txt", row.names = FALSE, col.names = TRUE)
   
-  # Return tidyData data frame.
-  tidydata
 }
