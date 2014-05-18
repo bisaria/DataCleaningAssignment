@@ -177,9 +177,9 @@ Human Activity Recognition Using Smartphones Data Set
       
 ##### Step 2 : Extract only the measurements on the mean and standard deviation for each measurement     
 
-  * As _only_ the measurements on the mean and standard deviation for each measurement is required, `grep()` is used to extract these relevant columns. 
+  * As _only_ the measurements on the mean and standard deviation for each measurement is required, `grepl()` is used to extract these relevant columns. 
   
-  * `grep()` is used get only those columns with `mean()` and `std()` at the end. This gives a vector of column names `selectColumns` only with `mean()` and `std()` as required.
+  * `grepl()` is used get only those columns with `mean()` and `std()` at the end. This gives a logical vector of column names `selectColumns` only with `mean()` and `std()` as required.
   
         selectColumns<-(grepl("-mean\\()$",names(data_Observations)) &
                     !grepl("-meanFreq\\()",names(data_Observations)) | 
